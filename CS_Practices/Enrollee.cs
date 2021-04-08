@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Practice_3
+namespace CS_Practices
 {
     public class Enrollee:Person
     {

@@ -1,4 +1,4 @@
-﻿namespace Practice_3
+﻿namespace CS_Practices
 {
     public class Person
     {

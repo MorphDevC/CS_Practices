@@ -6,7 +6,15 @@ namespace CS_Practices
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Enrollee enrollee = new Student(); //Это правильно?
+            enrollee.AutoFillingUserAcc();
+            //enrollee.FillingUserAcc();
+            Console.WriteLine();
+            enrollee.GetEnrolleeInf();
+            Student student = enrollee.Enrollment(false);
+            student.GetPlaceInfo();
+            student.IsBudgetary = true;
+            student.GetPlaceInfo();
         }
     }
 }

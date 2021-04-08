@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Practice_3
+namespace CS_Practices
 {
     public class Student:Enrollee
     {

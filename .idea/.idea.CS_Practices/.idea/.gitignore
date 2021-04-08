@@ -1,0 +1,13 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/contentModel.xml
+/projectSettingsUpdater.xml
+/.idea.CS_Practices.iml
+/modules.xml
+# Datasource local storage ignored files
+/../../../../../../../../:\Users\Администратор\RiderProjects\CS_Practices\.idea\.idea.CS_Practices\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/

@@ -5,40 +5,33 @@ namespace CS_Practices
 {
     public class Enrollee:Person
     {
-        public Enrollee():this(new EducationType())
+        #region ctors
+        public Enrollee():this("","","",0,0)
         {
             
         }
-        public Enrollee(EducationType educationType):this(educationType,0)
-        {
-            
-        }
-        public Enrollee(EducationType educationType,int finalChosenVectorEd):this(educationType,finalChosenVectorEd,"","","")
-        {
-        }
-        public Enrollee(EducationType educationType,int finalChosenVectorEd,string name, string secondName, string surname):this(educationType,finalChosenVectorEd,"","","",0)
-        {
-        }
-        public Enrollee(EducationType educationType,int finalChosenVectorEd,string name, string secondName, string surname,int score)
+        public Enrollee(string name, string secondName, string surname,int entranceScores,int finalChosenVectorEd)
             :base(name,secondName,surname)
         {
-            _educationType = educationType;
-            FinalChosenVectorEd = finalChosenVectorEd;
-            EntranceScores = score;
+            EntranceScores = entranceScores;
+            FinalChosenVectorEdIndex = finalChosenVectorEd;
         }
+        #endregion
 
-
+        #region privateFields
+        
         private EducationType _educationType = new EducationType();
         private int _entranceScores;
         private List<int> _chosenVectorEducations = new List<int>();
         private int _finalChosenVectorEd = 0;
+        #endregion
         
         //------------------
         public string getEducation(int index)
         {
-            if (index<=_educationType._vectorEducationCode.Count)
+            if (index<=EducationTypePr._vectorEducationCode.Count)
             {
-                return $"{_educationType._vectorEducationCode[index]} - {_educationType._vectorEducationName[index]}";
+                return $"{EducationTypePr._vectorEducationCode[index]} - {EducationTypePr._vectorEducationName[index]}";
             }
             else
             {
@@ -48,12 +41,12 @@ namespace CS_Practices
 
         public void GetEducations()
         {
-            if (_educationType._vectorEducationCode.Count.Equals(_educationType._vectorEducationName.Count))
+            if (EducationTypePr._vectorEducationCode.Count.Equals(EducationTypePr._vectorEducationName.Count))
             {
                 Console.WriteLine("Код направления - Наименование/ Свободных бюджетных мест");
-                for (int i = 0; i < _educationType._vectorEducationCode.Count; i++)
+                for (int i = 0; i < EducationTypePr._vectorEducationCode.Count; i++)
                 {
-                    Console.WriteLine($"{i+1}) {_educationType._vectorEducationCode[i]} - {_educationType._vectorEducationName[i]}");
+                    Console.WriteLine($"{i+1}) {EducationTypePr._vectorEducationCode[i]} - {EducationTypePr._vectorEducationName[i]}");
                 }
             }
             else
@@ -65,22 +58,33 @@ namespace CS_Practices
         {
             foreach (var index in ChosenVectorEducations)
             {
-                Console.WriteLine($"{_educationType._vectorEducationCode[index-1]} - {_educationType._vectorEducationName[index-1]}");   
+                Console.WriteLine($"{EducationTypePr._vectorEducationCode[index-1]} - {EducationTypePr._vectorEducationName[index-1]}");   
             }
         }
         
-        public bool isAlreadyChosen(int indexExisting)
+        public bool isEducationChosen(int indexExisting)
         {
             foreach (var index in ChosenVectorEducations)
             {
-                if (_educationType._vectorEducationCode[index]
-                    .Equals(_educationType._vectorEducationCode[indexExisting]))
+                if (EducationTypePr._vectorEducationCode[index]
+                    .Equals(EducationTypePr._vectorEducationCode[indexExisting]))
                 {
                     return true;
                 }
             }
             return false;
         }
+
+        public virtual void GetInfo()
+        {
+            Console.WriteLine($"Surname: {Surname}\n" +
+                              $"First name: {Name}\n" +
+                              $"Second name: {SecondName}\n" +
+                              $"Entrance score: {EntranceScores}\n");
+            
+            Console.WriteLine($"Final chosen education vector: {getEducation(FinalChosenVectorEdIndex)}");
+        }
+        
        
         //-------------------
         public int EntranceScores
@@ -97,14 +101,16 @@ namespace CS_Practices
 
         public int EducationCounts
         {
-            get => _educationType._vectorEducationCode.Count;
+            get => EducationTypePr._vectorEducationCode.Count;
         }
 
-        public int FinalChosenVectorEd
+        public int FinalChosenVectorEdIndex
         {
             get => _finalChosenVectorEd;
             set => _finalChosenVectorEd = value;
         }
+
+        public EducationType EducationTypePr => _educationType;
     }
     public static class EnroleeExtentions
     {
@@ -129,7 +135,7 @@ namespace CS_Practices
                 {
                     break;
                 }
-                else if(tempInt<=enrollee.EducationCounts && !enrollee.isAlreadyChosen(tempInt))
+                else if(tempInt<=enrollee.EducationCounts && !enrollee.isEducationChosen(tempInt))
                 {
                     enrollee.ChosenVectorEducations.Add(tempInt);
                 }
@@ -157,7 +163,7 @@ namespace CS_Practices
             for (int i = 0; i < 4; i++)
             {
                 int tempInt = rnd.Next(1, 6);
-                if(tempInt<=enrollee.EducationCounts && !enrollee.isAlreadyChosen(tempInt))
+                if(tempInt<=enrollee.EducationCounts && !enrollee.isEducationChosen(tempInt))
                 {
                     Console.WriteLine($"Random vector education: {enrollee.getEducation(tempInt)}");
                     enrollee.ChosenVectorEducations.Add(tempInt);
@@ -169,70 +175,12 @@ namespace CS_Practices
                 }
             }
 
-            enrollee.FinalChosenVectorEd = rnd.Next(0, enrollee.ChosenVectorEducations.Count);
+            enrollee.FinalChosenVectorEdIndex = rnd.Next(0, enrollee.ChosenVectorEducations.Count);
         }
-        
-        public static void GetEnrolleeInf(this Enrollee enrollee)
+        public static Student Enrollment(this Enrollee enrollee,bool isPassed)
         {
-            Console.WriteLine($"Surname: {enrollee.Surname}\n" +
-                              $"First name: {enrollee.Name}\n" +
-                              $"Second name: {enrollee.SecondName}\n" +
-                              $"Entrance score: {enrollee.EntranceScores}\n" +
-                              $"Chosen education vectors:");
-            enrollee.GetChosenEducations();
-            Console.WriteLine($"Final chosen education vector: {enrollee.getEducation(enrollee.FinalChosenVectorEd)}");
-        }
-        public static Student Enrollment(this Enrollee enrollee, bool isPassed)
-        {
-            Student student = (Student) enrollee;
-            student.IsBudgetary = isPassed;
-            student.GeneratePersonalSC_RB(student.FinalChosenVectorEd);
-            if (isPassed)
-            {
-                Console.WriteLine("Enrollee was enrollment for  budgetary place");
-            }
-            else
-            {
-                Console.WriteLine("Enrollee was enrollment for  extra budgetary place");
-            }
+            Student student = new Student(enrollee,isPassed);
             return student;
-            //return (Student) enrollee; //почему это тоже работает, если бы не было "return student;"?
         }
-    }
-
-    public class EducationType
-    {
-        public List<string> _vectorEducationCode = new List<string>()
-        {
-            "09.03.02",
-            "09.03.03",
-            "01.03.02",
-            "01.03.04",
-            "02.02.02",
-            "03.03.03"
-        };
-        public List<string> _vectorEducationName = new List<string>()
-        {
-            "Информационные системы и технологии",
-            "Прикладная информатика",
-            "Прикладная математика и информатика",
-            "Прикладная математика",
-            "Вымышленная программа 1",
-            "Лучшая Вымышленная программа 2"
-        };
-
-        public static List<string> VectorEducationLetters = new List<string>()
-        {
-            "CT",
-            "PI",
-            "MI",
-            "PM",
-            "VP",
-            "BV"
-        };
-
-        
-
-        // 1-1; 2-2; 3-3 ...
     }
 }
